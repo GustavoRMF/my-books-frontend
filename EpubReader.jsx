@@ -33,7 +33,7 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
   const fetchHighlights = async () => {
     if (!token) return [];
     try {
-      const res = await fetch(`http://localhost:3000/api/books/${bookId}/highlights`, {
+      const res = await fetch(`https://my-books-backend.onrender.com/api/books/${bookId}/highlights`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {

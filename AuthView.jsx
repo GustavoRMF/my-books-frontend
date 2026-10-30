@@ -17,7 +17,7 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
     
     try {
-      const response = await fetch(`http://localhost:3000${endpoint}`, {
+      const response = await fetch(`https://my-books-backend.onrender.com/api/books${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

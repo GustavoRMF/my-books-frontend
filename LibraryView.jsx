@@ -51,7 +51,7 @@ export default function LibraryView({
 
   useEffect(() => {
     if (!token) return;
-    fetch('http://localhost:3000/api/stats', { headers: { 'Authorization': `Bearer ${token}` } })
+    fetch('https://my-books-backend.onrender.com/api/books', { headers: { 'Authorization': `Bearer ${token}` } })
       .then(res => res.json()).then(data => setStats(data)).catch(err => console.error(err));
   }, [token]);
 

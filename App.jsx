@@ -88,7 +88,7 @@ export default function App() {
     formData.append('category', 'Geral');
 
     try {
-      const response = await fetch('http://localhost:3000/api/books', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData });
+      const response = await fetch('https://my-books-backend.onrender.com/api/books', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData });
       if (response.ok) {
         const n = await response.json();
         setBooks(prev => [{
