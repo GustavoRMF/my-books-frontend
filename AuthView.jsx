@@ -11,8 +11,7 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
   const API_URL = 'https://my-books-backend.onrender.com';
 
   // Imagem de fundo em 4K
-  const LOGIN_IMAGE_URL = 'https://s2.best-wallpaper.net/wallpaper/3840x2160/1805/Magic-ball-library-books_3840x2160.jpg';
-
+  const LOGIN_IMAGE_URL = '/fundo-login.jpg';
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
