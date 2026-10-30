@@ -10,6 +10,9 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
   const isDark = theme === 'dark';
   const API_URL = 'https://my-books-backend.onrender.com';
 
+  // Cole aqui o link direto da imagem que quer colocar na tela de login (ou deixe vazio se não quiser imagem extra)
+  const LOGIN_IMAGE_URL = 'https://s2.best-wallpaper.net/wallpaper/3840x2160/1805/Magic-ball-library-books_3840x2160.jpg'; 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -18,7 +21,6 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
     
     try {
-      // Correção: O "/api/books" foi removido da concatenação para evitar erro 404
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -61,7 +63,13 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
       }`}>
         
         <div className="text-center mb-8">
-          <span className="text-5xl block mb-4">📚</span>
+          {/* Se preencher a variável LOGIN_IMAGE_URL acima, ela aparece aqui. Senão, mostra o emoji 📚 */}
+          {LOGIN_IMAGE_URL ? (
+            <img src={LOGIN_IMAGE_URL} alt="Login Banner" className="w-20 h-20 mx-auto mb-4 rounded-xl object-cover shadow-md" />
+          ) : (
+            <span className="text-5xl block mb-4">📚</span>
+          )}
+
           <h1 className={`text-3xl font-extrabold tracking-tight ${
             isDark ? 'bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-600 to-indigo-800 bg-clip-text text-transparent'
           }`}>
@@ -91,7 +99,7 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
               className={`w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 transition ${
                 isDark ? 'bg-gray-800/80 border border-gray-700 focus:border-blue-500 focus:ring-blue-500/20 text-white' : 'bg-slate-50 border border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 text-slate-800'
               }`}
-              placeholder="Ex: guga123"
+              placeholder="Ex: Nome"
             />
           </div>
 
