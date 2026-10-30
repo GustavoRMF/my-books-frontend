@@ -11,7 +11,7 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
   const API_URL = 'https://my-books-backend.onrender.com';
 
   // Cole aqui o link direto da imagem que quer colocar na tela de login (ou deixe vazio se não quiser imagem extra)
-  const LOGIN_IMAGE_URL = 'https://s2.best-wallpaper.net/wallpaper/3840x2160/1805/Magic-ball-library-books_3840x2160.jpg'; 
+  const LOGIN_IMAGE_URL = 'https://s2.best-wallpaper.net/wallpaper/3840x2160/1805/Magic-ball-library-books_3840x2160.jpg';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
