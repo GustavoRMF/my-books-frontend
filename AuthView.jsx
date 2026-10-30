@@ -60,8 +60,8 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
         </button>
       </div>
 
-      <div className={`w-full max-w-md p-8 rounded-2xl border shadow-2xl backdrop-blur-md relative z-10 ${
-        isDark ? 'bg-gray-900/80 border-gray-700' : 'bg-white/90 border-slate-200'
+      <div className={`w-full max-w-md p-8 rounded-2xl border shadow-2xl backdrop-blur-lg relative z-10 ${
+        isDark ? 'bg-gray-900/40 border-gray-500/30' : 'bg-white/40 border-white/50'
       }`}>
         
         <div className="text-center mb-8">
