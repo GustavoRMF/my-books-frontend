@@ -21,10 +21,12 @@ export default function PdfReader({ bookUrl, bookId, lastCfi, theme: globalTheme
   const [notes, setNotes] = useState([]);
   const [newNoteText, setNewNoteText] = useState('');
 
+  const API_URL = 'https://my-books-backend.onrender.com';
+
   useEffect(() => {
     if (!token) return;
     const timer = setInterval(() => {
-      fetch('http://localhost:3000/api/reading-log', {
+      fetch(`${API_URL}/api/reading-log`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ book_id: bookId, minutes: 1 })
@@ -36,7 +38,7 @@ export default function PdfReader({ bookUrl, bookId, lastCfi, theme: globalTheme
   const fetchNotes = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/books/${bookId}/notes`, {
+      const res = await fetch(`${API_URL}/api/books/${bookId}/notes`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setNotes(await res.json());
@@ -47,7 +49,10 @@ export default function PdfReader({ bookUrl, bookId, lastCfi, theme: globalTheme
     if (!bookUrl) return;
     setLoading(true); setError(null);
 
-    const loadingTask = pdfjsLib.getDocument({ url: bookUrl, cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/', cMapPacked: true });
+    // Garante que o URL do PDF aponta para o Render caso seja um caminho relativo (ex: /uploads/...)
+    const fullBookUrl = bookUrl.startsWith('http') ? bookUrl : `${API_URL}${bookUrl}`;
+
+    const loadingTask = pdfjsLib.getDocument({ url: fullBookUrl, cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/', cMapPacked: true });
     loadingTask.promise
       .then((pdf) => {
         setPdfDoc(pdf); setTotalPages(pdf.numPages);
@@ -82,7 +87,7 @@ export default function PdfReader({ bookUrl, bookId, lastCfi, theme: globalTheme
     });
 
     const saveTimeout = setTimeout(() => {
-      fetch(`http://localhost:3000/api/books/${bookId}/progress`, {
+      fetch(`${API_URL}/api/books/${bookId}/progress`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ cfi: currentPage.toString(), percentage: totalPages > 0 ? (currentPage / totalPages) * 100 : 0 })
@@ -102,7 +107,7 @@ export default function PdfReader({ bookUrl, bookId, lastCfi, theme: globalTheme
     e.preventDefault();
     if (!newNoteText.trim() || !token) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/books/${bookId}/notes`, {
+      const res = await fetch(`${API_URL}/api/books/${bookId}/notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ content: newNoteText })
@@ -117,7 +122,7 @@ export default function PdfReader({ bookUrl, bookId, lastCfi, theme: globalTheme
 
   const handleDeleteNote = async (noteId) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/notes/${noteId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${API_URL}/api/notes/${noteId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) setNotes(prev => prev.filter(n => n.id !== noteId));
     } catch (err) { console.error(err); }
   };
