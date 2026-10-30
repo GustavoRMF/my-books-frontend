@@ -8,6 +8,7 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
   const [loading, setLoading] = useState(false);
 
   const isDark = theme === 'dark';
+  const API_URL = 'https://my-books-backend.onrender.com';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +18,8 @@ export default function AuthView({ setToken, theme, onToggleTheme }) {
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
     
     try {
-      const response = await fetch(`https://my-books-backend.onrender.com/api/books${endpoint}`, {
+      // Correção: O "/api/books" foi removido da concatenação para evitar erro 404
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

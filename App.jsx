@@ -15,6 +15,8 @@ export default function App() {
   const [books, setBooks] = useState([]);
   const [theme, setTheme] = useState(() => localStorage.getItem('app-theme') || 'dark');
 
+  const API_URL = 'https://my-books-backend.onrender.com';
+
   useEffect(() => {
     if (token) localStorage.setItem('auth_token', token);
     else localStorage.removeItem('auth_token');
@@ -28,7 +30,7 @@ export default function App() {
 
   const fetchBooks = () => {
     if (!token) return;
-    fetch('http://localhost:3000/api/books', { headers: { 'Authorization': `Bearer ${token}` } })
+    fetch(`${API_URL}/api/books`, { headers: { 'Authorization': `Bearer ${token}` } })
       .then(res => { if (!res.ok) throw new Error('Sessão expirada'); return res.json(); })
       .then(data => {
         const formattedBooks = data.map(book => ({
@@ -88,7 +90,7 @@ export default function App() {
     formData.append('category', 'Geral');
 
     try {
-      const response = await fetch('https://my-books-backend.onrender.com/api/books', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData });
+      const response = await fetch(`${API_URL}/api/books`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData });
       if (response.ok) {
         const n = await response.json();
         setBooks(prev => [{
@@ -103,7 +105,7 @@ export default function App() {
 
   const handleUpdateCategory = async (bookId, newCategory) => {
     try {
-      if ((await fetch(`http://localhost:3000/api/books/${bookId}/category`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ category: newCategory }) })).ok) {
+      if ((await fetch(`${API_URL}/api/books/${bookId}/category`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ category: newCategory }) })).ok) {
         setBooks(prev => prev.map(b => b.id === bookId ? { ...b, category: newCategory } : b));
       }
     } catch (err) { console.error(err); }
@@ -111,7 +113,7 @@ export default function App() {
 
   const handleUpdateDetails = async (bookId, title, author) => {
     try {
-      if ((await fetch(`http://localhost:3000/api/books/${bookId}/details`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ title, author }) })).ok) {
+      if ((await fetch(`${API_URL}/api/books/${bookId}/details`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ title, author }) })).ok) {
         setBooks(prev => prev.map(b => b.id === bookId ? { ...b, title, author } : b));
       }
     } catch (err) { console.error(err); }
@@ -119,7 +121,7 @@ export default function App() {
 
   const handleUpdateRating = async (bookId, rating) => {
     try {
-      if ((await fetch(`http://localhost:3000/api/books/${bookId}/rating`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ rating }) })).ok) {
+      if ((await fetch(`${API_URL}/api/books/${bookId}/rating`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ rating }) })).ok) {
         setBooks(prev => prev.map(b => b.id === bookId ? { ...b, rating } : b));
       }
     } catch (err) { console.error(err); }
@@ -127,7 +129,7 @@ export default function App() {
 
   const handleDeleteBook = async (bookId) => {
     try {
-      if ((await fetch(`http://localhost:3000/api/books/${bookId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })).ok) {
+      if ((await fetch(`${API_URL}/api/books/${bookId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })).ok) {
         setBooks(prev => prev.filter(b => b.id !== bookId));
       }
     } catch (err) { console.error(err); }

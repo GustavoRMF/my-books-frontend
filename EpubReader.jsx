@@ -18,10 +18,12 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
   const [newNoteText, setNewNoteText] = useState('');
   const [highlights, setHighlights] = useState([]);
 
+  const API_URL = 'https://my-books-backend.onrender.com';
+
   useEffect(() => {
     if (!token) return;
     const timer = setInterval(() => {
-      fetch('http://localhost:3000/api/reading-log', {
+      fetch(`${API_URL}/api/reading-log`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ book_id: bookId, minutes: 1 })
@@ -33,7 +35,7 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
   const fetchHighlights = async () => {
     if (!token) return [];
     try {
-      const res = await fetch(`https://my-books-backend.onrender.com/api/books/${bookId}/highlights`, {
+      const res = await fetch(`${API_URL}/api/books/${bookId}/highlights`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -48,7 +50,7 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
   const fetchNotes = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/books/${bookId}/notes`, {
+      const res = await fetch(`${API_URL}/api/books/${bookId}/notes`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setNotes(await res.json());
@@ -94,7 +96,7 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
       }
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => {
-        fetch(`http://localhost:3000/api/books/${bookId}/progress`, {
+        fetch(`${API_URL}/api/books/${bookId}/progress`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ cfi: currentCfi, percentage: percentage })
@@ -105,7 +107,7 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
     localRendition.on("selected", async (cfiRange) => {
       const selectedText = rendition ? rendition.getRange(cfiRange)?.toString() : '';
       try {
-        const res = await fetch(`http://localhost:3000/api/books/${bookId}/highlights`, {
+        const res = await fetch(`${API_URL}/api/books/${bookId}/highlights`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ cfi_range: cfiRange, text_content: selectedText, color: 'yellow' })
@@ -143,7 +145,7 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
     e.preventDefault();
     if (!newNoteText.trim() || !token) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/books/${bookId}/notes`, {
+      const res = await fetch(`${API_URL}/api/books/${bookId}/notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ content: newNoteText })
@@ -158,7 +160,7 @@ export default function CompleteEpubReader({ bookUrl, bookId, lastCfi, theme: gl
 
   const handleDeleteNote = async (noteId) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/notes/${noteId}`, {
+      const res = await fetch(`${API_URL}/api/notes/${noteId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
