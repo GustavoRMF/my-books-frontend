@@ -35,8 +35,10 @@ export default function App() {
       .then(data => {
         const formattedBooks = data.map(book => ({
           id: book.id, title: book.title, author: book.author, coverUrl: book.cover_url,
-          bookUrl: book.book_url, fileType: book.file_type || (book.book_url?.toLowerCase().endsWith('.pdf') ? 'pdf' : 'epub'),
+          // CORREÇÃO 1: Adicionado o API_URL com proteção para valores nulos ao carregar livros
+          bookUrl: book.book_url ? (book.book_url.startsWith('http') ? book.book_url : `${API_URL}${book.book_url}`) : '',
           category: book.category || 'Geral', lastCfi: book.last_cfi, progress: parseFloat(book.progress_percent) || 0,
+          fileType: book.file_type || (book.book_url?.toLowerCase().endsWith('.pdf') ? 'pdf' : 'epub'),
           rating: parseInt(book.rating) || 0
         }));
         setBooks(formattedBooks);
@@ -94,7 +96,9 @@ export default function App() {
       if (response.ok) {
         const n = await response.json();
         setBooks(prev => [{
-          id: n.id, title: n.title, author: n.author, coverUrl: n.cover_url, bookUrl: n.book_url,
+          id: n.id, title: n.title, author: n.author, coverUrl: n.cover_url, 
+          // CORREÇÃO 2: Adicionado o API_URL aqui também para que o livro recém-adicionado abra perfeitamente
+          bookUrl: n.book_url ? (n.book_url.startsWith('http') ? n.book_url : `${API_URL}${n.book_url}`) : '',
           fileType: n.file_type || (isPdf ? 'pdf' : 'epub'), category: n.category || 'Geral',
           lastCfi: n.last_cfi, progress: parseFloat(n.progress_percent) || 0, rating: parseInt(n.rating) || 0
         }, ...prev]);
